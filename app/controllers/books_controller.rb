@@ -13,4 +13,16 @@ class BooksController < ApplicationController
   def show
     render layout: false
   end
+
+  def create
+    new_book = params.require(:book).permit(:title, :description)
+    book = Book.create(new_book)
+
+    respond_to do |f|
+        f.html {redirect_to books_path}
+        f.json {render json: book }
+    end
+  end
+
+
 end
