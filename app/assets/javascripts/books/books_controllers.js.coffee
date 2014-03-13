@@ -18,16 +18,19 @@ BookAppCtrls.controller("BooksCtrl", ["$scope", "$routeParams", "$http", ($scope
   $http.get("/books.json").success (response)->
     $scope.fakeBooks = $scope.fakeBooks.concat(response)
 
-  $scope.newBook = title: "blah"
+  $scope.newBook = 
+    title: "blah"
   $scope.saveBook = ->
-    $http.post(
-      url: "/books"
+    $http(
+      method: "post"
+      url: "/books.json"
       data:
-        book:
-          title: $scope.newBook
+        book: $scope.newBook
+      headers:
+        'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')
 
-        authenticity_token: $('meta[name=csrf-token]').attr('content')                  
     ).success (data) ->
+      $scope.fakeBooks = $scope.fakeBooks.concat(data)
       console.log data
       return
 
